@@ -18,7 +18,7 @@ so.setblocking(False)
 so.settimeout(3)
 print('before connection')
 
-so.sendto(magic_packet, ('192.168.0.157', 9))
+so.sendto(magic_packet, ('192.168.0.143', 9))
 print('packet send')
 so.close
 
