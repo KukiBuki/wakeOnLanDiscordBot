@@ -1,9 +1,12 @@
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
+import wolDiscordBot
+import startServer
 
 import os
 import sys
+
 
 def restart_bot_script():
         
@@ -43,6 +46,30 @@ class BotCommands(commands.Cog, name="BotCommands"):
         await context.send("Bot is restarting, wait a moment")
         restart_bot_script()
 
+    @commands.hybrid_command(
+        name="start_host",
+        description="Wake gaming server by issuing Magic Packet from controller to BoberGaming"
+    )
+    async def start_host(self, context: Context) -> None:
+        print("Sending Magic packet to Bober Gaming")
+        wolDiscordBot.wakeUp()
+        await context.send("Bober Gaming should be starting in a minute, happy gaming")
+    
+    @commands.hybrid_command(
+        name="start_server",
+        description="Start game server",
+        command_attrs=["terraria","zomboid"]
+    )
+    async def start_server(self, context: Context, game) -> None:
+        print("Sending Magic packet to Bober Gaming")
+        if game == 'zomboid':
+            startServer.startZomboid()
+            await context.send("Starting Zomboid Server on 192.168.0.143 port 21261!")
+        elif game == 'terraria':
+            startServer.startTerraria()
+            await context.send("Starting Terraria Server on 192.168.0.143 port 7777!")
+        else:
+            await context.send("Bober Gaming should be starting in a minute, happy gaming")
     
     # And then we finally add the cog to the bot so that it can load, unload, reload and use it's content.
 async def setup(bot) -> None:

@@ -13,10 +13,8 @@ intents.message_content = True
 
 
 load_dotenv()
-discord_server_token=os.getenv("discord_server_token")
-discord_server_id=os.getenv("discord_server_id")
-assert discord_server_token is not None, discord_server_token
-assert discord_server_id is not None, discord_server_id
+discord_server_token=os.getenv("discord_server_token", default="")
+discord_server_id=os.getenv("discord_server_id", default="")
 
 
 class LoggingFormatter(logging.Formatter):
