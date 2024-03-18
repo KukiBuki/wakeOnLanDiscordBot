@@ -57,10 +57,19 @@ class BotCommands(commands.Cog, name="BotCommands"):
     
     @commands.hybrid_command(
         name="start_server",
-        description="Start game server",
-        command_attrs=["terraria","zomboid"]
+        description="Start game server"
     )
-    async def start_server(self, context: Context, game) -> None:
+    @app_commands.choices(game=[
+        app_commands.Choice(name='Terraria',value="terraria"),
+        app_commands.Choice(name='Project Zomboid',value="zomboid")
+        ]
+    )
+    async def start_server(self, context: Context, game=[app_commands.Choice[str]]) -> None:
+        servers = {
+            "terraria": "terraria",
+            "Project Zomboid": "zomboid"
+            }
+                
         print("Sending Magic packet to Bober Gaming")
         if game == 'zomboid':
             startServer.startZomboid()
