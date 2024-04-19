@@ -1,3 +1,4 @@
+import discord
 from discord import app_commands
 from discord.ext import commands
 from discord.ext.commands import Context
@@ -6,6 +7,8 @@ import startServer
 
 import os
 import sys
+import asyncio
+from concurrent.futures import ThreadPoolExecutor
 
 
 def restart_bot_script():
@@ -57,19 +60,27 @@ class BotCommands(commands.Cog, name="BotCommands"):
     
     @commands.hybrid_command(
         name="start_server",
-        description="Start game server",
-        command_attrs=["terraria","zomboid"]
+        description="Start game server"
     )
-    async def start_server(self, context: Context, game) -> None:
-        print("Sending Magic packet to Bober Gaming")
-        if game == 'zomboid':
-            startServer.startZomboid()
+    @app_commands.choices(game=[
+        app_commands.Choice(name='Terraria',value='terraria'),
+        app_commands.Choice(name='Project Zomboid',value='zomboid')
+        ]
+    )
+    async def start_server(self, context: Context, game: app_commands.Choice[str]) -> None:
+                
+        if game.value == 'zomboid':
+            loop = asyncio.get_event_loop()
+            block_return = await loop.run_in_executor(ThreadPoolExecutor(), startServer.startZomboid)
+            #startServer.startZomboid()
             await context.send("Starting Zomboid Server on 192.168.0.143 port 21261!")
-        elif game == 'terraria':
-            startServer.startTerraria()
+        elif game.value == 'terraria':
+            loop = asyncio.get_event_loop()
+            block_return = await loop.run_in_executor(ThreadPoolExecutor(), startServer.startTerraria)
+            #startServer.startTerraria()
             await context.send("Starting Terraria Server on 192.168.0.143 port 7777!")
         else:
-            await context.send("Bober Gaming should be starting in a minute, happy gaming")
+            await context.send("Wrong server name")
     
     # And then we finally add the cog to the bot so that it can load, unload, reload and use it's content.
 async def setup(bot) -> None:
